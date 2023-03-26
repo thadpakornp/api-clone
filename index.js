@@ -12,7 +12,11 @@ app.use(express.json());
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://admin:MTMGUVfAawW8tJc9@cluster0.gnzu8cq.mongodb.net/?retryWrites=true&w=majority');
 
-app.post('/register', body('username').not().isEmpty(), body('password').isLength({min: 6, max: 20}), body('yourname').not().isEmpty(), async (req, res) => {
+app.get('/', (req, res) => {
+    res.send('Hey this is my API running 🥳')
+});
+
+app.post('/register', body('username').not().isEmpty(), body('password').isLength({ min: 6, max: 20 }), body('yourname').not().isEmpty(), async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ message: 'error', errors: errors.array() });
@@ -21,7 +25,7 @@ app.post('/register', body('username').not().isEmpty(), body('password').isLengt
     const payload = req.body;
     const user = new User(payload);
     await user.save();
-    
+
     return res.status(200).json({ message: 'success', data: user });
 });
 
@@ -40,3 +44,5 @@ app.post('/register', body('username').not().isEmpty(), body('password').isLengt
 app.listen(port, () => {
     console.log("Example app listening at http://localhost:" + port);
 });
+
+module.exports = app;
